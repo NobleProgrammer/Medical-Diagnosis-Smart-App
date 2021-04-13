@@ -1,0 +1,129 @@
+symptom(weak_vision).
+symptom(outward_eye).
+symptom(inward_eye).
+symptom(poor_depth_perception).
+symptom(head_tilting).
+symptom(bluging_eye).
+symptom(eye_lump).
+symptom(eye_pain).
+symptom(shadow_in_vision).
+symptom(runny_nose).
+symptom(itchy_nose).
+symptom(itchy_eye).
+symptom(red_eye).
+symptom(chest_tightness).
+symptom(swollen_lips).
+symptom(swollen_tongue).
+symptom(swollen_eyes).
+symptom(dry_skin).
+symptom(red_skin).
+symptom(cracked_skin).
+symptom(inflamed_skin).
+symptom(itchy).
+symptom(dark_patches).
+symptom(rough_skin).
+symptom(scaly_patches).
+symptom(oozing).
+symptom(crusting).
+symptom(swelling).  
+symptom(whitish_silver_scales).
+symptom(itchy_patches).
+symptom(thick_nails).
+symptom(pitted_nails).
+symptom(swollen_joints).
+symptom(crusting_rash).
+symptom(high_temperature).
+symptom(sneezing).
+symptom(cough).
+symptom(sore_throat).
+symptom(low_temprature).
+symptom(diarrhoea).
+symptom(tummy_pain).
+symptom(vomiting).
+symptom(headache).
+symptom(urinating_often).
+symptom(feel_thirsty).
+symptom(feel_hungry).
+symptom(blurred_vision).
+symptom(wounds_are_slow_to_heal).
+symptom(weight_loss).
+symptom(fever).
+symptom(oily_stool).
+symptom(loss_of_balance).
+symptom(arm_weakness).
+symptom(slurred_speech).
+symptom(face_drop).
+
+start:- welcome, nl, (checkfor(Disease), report(Disease),!) ; nothing, !.
+% start welcoming page, start questioning, if programe doesn't conculde any diesease, print nothing rule, else reprot the disease% 
+
+nothing:-  write("Based on our knowledge, You don't have anything alhamdullah!").
+report(Disease):- write("Based on our humble knowledge, we think you have "), write(Disease), nl, !.   
+                     
+welcome:- write("Welcome to our medical expert system, this system can no if you potentianlly -hopefully not- one of the follwoing Disease "), nl,
+			write("Skin related: allergie, eczema, psoriasis, or rash "), nl,
+			 write("Eye related: eye_cancer, amblyopia, eyestrain"), nl,
+			  write("Other common diseases: common_cold, gastroenteritis,  diabetes, acute_pancreatitis, stroke."), nl,
+			  write("By answering question by yes/no only!").
+
+
+checkfor(allegrie):- allegrie.
+checkfor(eczema):- eczema.
+checkfor(psoriasis):- psoriasis.
+checkfor(rash):- rash.
+
+checkfor(eye_cancer):- eyecancer.
+checkfor(amblyopia):- amblyopia.
+checkfor(eyestrain):- eyestrain.
+
+checkfor(common_cold):- common_cold.
+checkfor(gastroenteritis):- gastroenteritis.
+checkfor(diabetes):- diabetes.
+checkfor(acute_pancreatitis):- acute_pancreatitis.
+checkfor(stroke):- stroke.
+
+common_cold:- checksymptoms(symptom(runny_nose)), checksymptoms(symptom(sneezing)),  ( checksymptoms(symptom(cough)) ; checksymptoms(symptom(sore_throat))), checksymptoms(symptom(low_temprature)).
+
+gastroenteritis:- (checksymptoms(symptom(tummy_pain)) ; checksymptoms(symptom(diarrhoea))), checksymptoms(symptom(vomiting)),  checksymptoms(symptom(headache)).
+
+diabetes:- checksymptoms(symptom(urinating_often)), checksymptoms(symptom(feel_thirsty)), checksymptoms(symptom(feel_hungry)),
+checksymptoms(symptom(blurred_vision)), checksymptoms(symptom(wounds_are_slow_to_heal)).
+
+acute_pancreatitis:- checksymptoms(symptom(tummy_pain)), ( checksymptoms(symptom(vomiting)) ; checksymptoms(symptom(weight_loss))), 
+checksymptoms(symptom(fever)), checksymptoms(symptom(oily_stool)).
+
+stroke:- checksymptoms(symptom(loss_of_balance)), checksymptoms(symptom(headache)), checksymptoms(symptom(blurred_vision)),
+checksymptoms(symptom(arm_weakness)), (checksymptoms(symptom(slurred_speech)) ; checksymptoms(symptom(face_drop))).
+
+eyecancer:- checksymptoms(symptom(shadow_in_vision)), checksymptoms(symptom(blurred_vision)), checksymptoms(symptom(bluging_eye)), nl.
+amblyopia :- checksymptoms(symptom(head_tilting)), (checksymptoms(symptom(outward_eye)); checksymptoms(symptom(inward_eye)) ) , checksymptoms(symptom(poor_depth_perception)), nl.
+eyestrain:- checksymptoms(symptom(headache)), checksymptoms(symptom(red_eye)), checksymptoms(symptom(itchy_eye)), nl.
+
+allegrie:- 
+    checksymptoms(symptom(itchy_nose)),checksymptoms(symptom(red_eye)),checksymptoms(symptom(chest_tightness)),
+    (checksymptoms(symptom(swollen_lips)) ; checksymptoms(symptom(swollen_tongue))), nl.
+
+eczema:-
+    (checksymptoms(symptom(inflamed_skin));checksymptoms(symptom(itchy))),checksymptoms(symptom(dark_patches)),checksymptoms(symptom(rough_skin)),
+    checksymptoms(symptom(scaly_patches)),nl.
+
+psoriasis:-
+       (checksymptoms(symptom(inflamed_skin)); checksymptoms(symptom(red_skin))),checksymptoms(symptom(whitish_silver_scales)),checksymptoms(symptom(dry_skin)),checksymptoms(symptom(crached_skin)), nl.
+
+rash:-
+    checksymptoms(symptom(cracked_skin)),checksymptoms(symptom(dry_skin)),(checksymptoms(symptom(crusting_rash));checksymptoms(symptom(swelling))),
+    checksymptoms(symptom(high_temperature)),nl.
+
+
+checksymptoms(X):- ((have(X) ->   true); (doesnthave(X) ->   false) ; write("Do you have "), write(X), read(Y),
+    ( Y == yes -> assert(have(X)), nl, true ; Y == no -> assert(doesnthave(X)), nl, false)).  
+
+% if symptom already being answered by yes or no, then no exit and no need to question the client again, if didn't answer before, update working memory with the answer %
+% not that have means yes, doesnthave meanes no %
+
+:- dynamic have/1, doesnthave/1.
+
+
+%https://www.nhsinform.scot/illnesses-and-conditions/cancer/cancer-types-in-adults/eye-cancer%
+%https://www.mayoclinic.org/diseases-conditions/lazy-eye/symptoms-causes/syc-20352391%
+%https://www.mayoclinic.org/diseases-conditions/eyestrain/symptoms-causes/syc-20372397%
